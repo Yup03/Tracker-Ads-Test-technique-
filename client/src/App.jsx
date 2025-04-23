@@ -5,19 +5,24 @@ import Map from "./components/Map"
 function App() {
   // Données factices des annonces de tracteurs
   const [tractorAds, setTractorAds] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     // Code de chargement des annonces de tracteurs depuis une API
     const getAnnounces = async () => {
       try {
+        setIsLoading(true)
         const res = await fetch(
           "https://tracker-ads-test-technique.onrender.com/api/announces"
         )
         const { data } = await res.json()
 
         setTractorAds(data)
+        setIsLoading(false)
       } catch (error) {
         console.error(error)
+      } finally {
+        setIsLoading(false)
       }
     }
 
@@ -32,7 +37,7 @@ function App() {
       </h1>
       <div className="lg:flex lg:gap-6 container mx-auto p-4">
         {/* Annonces tracteurs */}
-        <TractorAds tractorAds={tractorAds} />
+        <TractorAds tractorAds={tractorAds} isLoading={isLoading} />
         {/* Carte */}
         <Map tractorAds={tractorAds} />
       </div>
