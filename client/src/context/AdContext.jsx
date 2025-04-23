@@ -9,7 +9,9 @@ export default function AdProvider({ children }) {
   const getAnnounces = async () => {
     try {
       setIsLoading(true)
-      const res = await fetch("http://localhost:221/api/announces")
+      const res = await fetch(
+        "https://tracker-ads-test-technique.onrender.com/api/announces"
+      )
       const { data } = await res.json()
 
       setTractorAds(data)
@@ -24,9 +26,12 @@ export default function AdProvider({ children }) {
   async function handleDelete(id) {
     // Effectuer la requête DELETE pour supprimer l'annonce
     try {
-      await fetch(`http://localhost:221/api/announces/${id}`, {
-        method: "DELETE",
-      })
+      await fetch(
+        `https://tracker-ads-test-technique.onrender.com/api/announces/${id}`,
+        {
+          method: "DELETE",
+        }
+      )
 
       //   Recupérer la liste des annonces mise à jour
       getAnnounces()
