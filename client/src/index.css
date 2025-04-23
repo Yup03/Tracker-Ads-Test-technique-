@@ -3,6 +3,9 @@
 body {
   color: #333;
 }
+button {
+  cursor: pointer;
+}
 
 .loader {
   display: inline-grid;
