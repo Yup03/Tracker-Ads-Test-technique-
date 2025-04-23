@@ -10,7 +10,9 @@ function App() {
     // Code de chargement des annonces de tracteurs depuis une API
     const getAnnounces = async () => {
       try {
-        const res = await fetch("http://localhost:221/api/announces")
+        const res = await fetch(
+          "https://tracker-ads-test-technique.onrender.com/api/announces"
+        )
         const { data } = await res.json()
 
         setTractorAds(data)
