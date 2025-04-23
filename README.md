@@ -24,7 +24,7 @@ Elle permet de gérer une liste d'annonces fictives de tracteurs, affichées sur
 ### 1. Cloner le repo
 
 ```bash
-git clone https://github.com/ton-utilisateur/tractors-ads-app.git
+git clone https://github.com/Yup03/Tracker-Ads-Test-technique-.git
 cd test_technique
 ```
 
