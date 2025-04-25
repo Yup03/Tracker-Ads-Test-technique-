@@ -14,7 +14,7 @@ const Map = ({ tractorAds }) => {
   return (
     <div className="lg:w-1/2 h-[500px]">
       <MapContainer
-        center={[14.7167, -17.4677]} // Centré sur Dakar
+        center={[14.21, -15.79]} // Centré sur le pays
         zoom={7}
         scrollWheelZoom={false}
         className="rounded-lg shadow-md h-[600px]"

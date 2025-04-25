@@ -1,6 +1,6 @@
-import TractorAdItem from './TractorAdItem';
-
 // Composant principal pour l'affichage des annonces de tracteurs
+import TractorAdItem from "./TractorAdItem"
+
 const TractorAds = ({ tractorAds, isLoading }) => {
   // Affichage d'un indicateur de chargement si les données sont en cours de chargement
   if (isLoading) {
@@ -29,7 +29,7 @@ const TractorAds = ({ tractorAds, isLoading }) => {
         <TractorAdItem key={ad.id} ad={ad} />
       ))}
     </ul>
-  );
-};
+  )
+}
 
-export default TractorAds;
+export default TractorAds

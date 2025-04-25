@@ -1,4 +1,19 @@
 import { useState } from "react"
+import { useAdContext } from "../context/AdContext"
+
+// Cities data with coordinates
+const cities = [
+  { name: "Dakar", latitude: 14.7167, longitude: -17.4677 },
+  { name: "Thiès", latitude: 14.791, longitude: -16.9359 },
+  { name: "Saint-Louis", latitude: 16.0326, longitude: -16.4818 },
+  { name: "Ziguinchor", latitude: 12.5645, longitude: -16.2886 },
+  { name: "Kaolack", latitude: 14.1652, longitude: -16.0726 },
+  { name: "Tambacounda", latitude: 13.7707, longitude: -13.6673 },
+  { name: "Louga", latitude: 15.6173, longitude: -16.224 },
+  { name: "Fatick", latitude: 14.339, longitude: -16.4154 },
+  { name: "Matam", latitude: 15.6559, longitude: -13.2548 },
+  { name: "Kolda", latitude: 12.8983, longitude: -14.9412 },
+]
 
 const CreateAdModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
@@ -10,6 +25,8 @@ const CreateAdModal = ({ isOpen, onClose }) => {
     longitude: "",
   })
 
+  const { createAnnounce } = useAdContext()
+
   const handleChange = e => {
     const { name, value } = e.target
     setFormData(prevState => ({
@@ -18,16 +35,33 @@ const CreateAdModal = ({ isOpen, onClose }) => {
     }))
   }
 
+  // Handle city selection and update coordinates
+  const handleCityChange = e => {
+    const selectedCity = e.target.value
+    const cityData = cities.find(city => city.name === selectedCity)
+
+    if (cityData) {
+      setFormData(prevState => ({
+        ...prevState,
+        location: selectedCity,
+        latitude: cityData.latitude,
+        longitude: cityData.longitude,
+      }))
+    } else {
+      setFormData(prevState => ({
+        ...prevState,
+        location: selectedCity,
+        latitude: "",
+        longitude: "",
+      }))
+    }
+  }
+
   const handleSubmit = async e => {
     e.preventDefault()
     console.log("Form submitted:", formData)
-    const newAd = await fetch("http://localhost:221/api/announces", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
+    createAnnounce(formData)
+
     onClose()
   }
 
@@ -112,16 +146,26 @@ const CreateAdModal = ({ isOpen, onClose }) => {
               >
                 Localisation
               </label>
-              <input
-                type="text"
+              <select
                 id="location"
                 name="location"
                 value={formData.location}
-                onChange={handleChange}
-                placeholder="Ex: Saint-Louis"
+                onChange={handleCityChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 required
-              />
+              >
+                <option value="">Sélectionnez une ville</option>
+                {cities.map(city => (
+                  <option key={city.name} value={city.name}>
+                    {city.name}
+                  </option>
+                ))}
+              </select>
+              {formData.latitude && formData.longitude && (
+                <p className="text-xs text-gray-500 mt-1">
+                  Coordonnées: {formData.latitude}, {formData.longitude}
+                </p>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -142,6 +186,7 @@ const CreateAdModal = ({ isOpen, onClose }) => {
                   step="any"
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   required
+                  readOnly
                 />
               </div>
 
@@ -162,6 +207,7 @@ const CreateAdModal = ({ isOpen, onClose }) => {
                   step="any"
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   required
+                  readOnly
                 />
               </div>
             </div>

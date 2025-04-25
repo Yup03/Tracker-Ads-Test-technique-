@@ -1,9 +1,12 @@
 import TractorAds from "./components/TractorAds"
 import Map from "./components/Map"
 import { useAdContext } from "./context/AdContext"
+import { useState } from "react"
+import CreateAdModal from "./components/CreateAdModal"
 
 function App() {
   const { tractorAds, isLoading } = useAdContext()
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   return (
     <div className="min-h-screen bg-gray-50 mt-10">
@@ -12,12 +15,12 @@ function App() {
           <h1 className="text-3xl font-bold text-center">
             Annonces de Tracteurs
           </h1>
-          {/* <button
+          <button
             onClick={() => setIsModalOpen(true)}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
             Nouvelle annonce
-          </button> */}
+          </button>
         </div>
       </div>
 
@@ -26,10 +29,10 @@ function App() {
         <Map tractorAds={tractorAds} />
       </div>
 
-      {/* <CreateAdModal
+      <CreateAdModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-      /> */}
+      />
     </div>
   )
 }

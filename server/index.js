@@ -40,6 +40,7 @@ let announces = [
   },
 ]
 
+app.use(express.json())
 app.use(cors())
 
 app.get("/api/announces", (req, res) => {
@@ -51,6 +52,23 @@ app.route("/api/announces/:id").delete((req, res) => {
   announces = announces.filter(announce => announce.id !== id)
 
   res.status(204).json({ status: "success" })
+})
+
+app.route("/api/announces").post((req, res) => {
+  const { title, description, price, location, latitude, longitude } = req.body
+
+  const newAnnounce = {
+    id: announces.length + 1,
+    title,
+    description,
+    price,
+    location,
+    coordinates: [+latitude, +longitude],
+  }
+
+  announces.push(newAnnounce)
+
+  res.status(201).json({ status: "success", data: newAnnounce })
 })
 
 app.listen(221, () => {
