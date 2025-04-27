@@ -1,6 +1,13 @@
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMapEvents,
+} from "react-leaflet"
 import { Icon } from "leaflet"
 import "leaflet/dist/leaflet.css"
+import { useNavigate } from "react-router-dom"
 
 const Map = ({ tractorAds }) => {
   const markertIcon = new Icon({
@@ -25,12 +32,30 @@ const Map = ({ tractorAds }) => {
         />
         {/* Marqueurs pour chaque annonce */}
         {tractorAds.map(ad => (
-          <Marker position={ad.coordinates} icon={markertIcon}>
+          <Marker position={ad.coordinates} icon={markertIcon} key={ad.id}>
             <Popup>{ad.location}</Popup>
           </Marker>
         ))}
+        <DetectClick />
       </MapContainer>
+      <h2>
+        Vous pouvez aussi{" "}
+        <strong className="text-green-500">clicker un endroit</strong> sut la
+        carte pour <em className="text-green-600">ajouter une annonce</em>.
+      </h2>
     </div>
   )
+}
+
+const DetectClick = () => {
+  const navigate = useNavigate()
+  useMapEvents({
+    click(e) {
+      const { lat, lng } = e.latlng
+      navigate(`/creer-annonce?lat=${lat}&lng=${lng}`)
+
+      return false // prevent regular marker stuff
+    },
+  })
 }
 export default Map

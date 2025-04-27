@@ -61,7 +61,12 @@ export default function AdProvider({ children }) {
 
   return (
     <AdContext.Provider
-      value={{ tractorAds, isLoading, deleteAnnounce, createAnnounce }}
+      value={{
+        tractorAds,
+        isLoading,
+        deleteAnnounce,
+        createAnnounce,
+      }}
     >
       {children}
     </AdContext.Provider>

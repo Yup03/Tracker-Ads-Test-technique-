@@ -1,5 +1,6 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useAdContext } from "../context/AdContext"
+import { useNavigate, useSearchParams } from "react-router-dom"
 
 // Cities data with coordinates
 const cities = [
@@ -13,9 +14,18 @@ const cities = [
   { name: "Fatick", latitude: 14.339, longitude: -16.4154 },
   { name: "Matam", latitude: 15.6559, longitude: -13.2548 },
   { name: "Kolda", latitude: 12.8983, longitude: -14.9412 },
+  { name: "Kédougou", latitude: 12.8439, longitude: -12.2524 },
+  { name: "Sédhiou", latitude: 12.9028, longitude: -15.5648 },
+  { name: "Diourbel", latitude: 14.7801, longitude: -16.0359 },
+  { name: "Kaffrine", latitude: 14.2271, longitude: -15.2462 },
 ]
 
-const CreateAdModal = ({ isOpen, onClose }) => {
+const CreateAdModal = () => {
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const { lat, lng } = Object.fromEntries(searchParams)
+  const { createAnnounce } = useAdContext()
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -24,8 +34,6 @@ const CreateAdModal = ({ isOpen, onClose }) => {
     latitude: "",
     longitude: "",
   })
-
-  const { createAnnounce } = useAdContext()
 
   const handleChange = e => {
     const { name, value } = e.target
@@ -62,10 +70,26 @@ const CreateAdModal = ({ isOpen, onClose }) => {
     console.log("Form submitted:", formData)
     createAnnounce(formData)
 
-    onClose()
+    navigate("/")
   }
 
-  if (!isOpen) return null
+  useEffect(() => {
+    const getCity = async () => {
+      const res = await fetch(
+        `https://us1.api-bdc.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=fr`
+      )
+      const data = await res.json()
+
+      setFormData(prevState => ({
+        ...prevState,
+        location: data.principalSubdivision || data.locality || data.city,
+        latitude: lat,
+        longitude: lng,
+      }))
+    }
+
+    getCity()
+  }, [lat, lng])
 
   return (
     <div className="fixed inset-0 bg-black/20 flex items-center justify-center p-4 z-[1100]">
@@ -74,7 +98,7 @@ const CreateAdModal = ({ isOpen, onClose }) => {
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold">Nouvelle annonce</h2>
             <button
-              onClick={onClose}
+              onClick={() => navigate("/")}
               className="text-gray-500 hover:text-gray-700"
             >
               ✕
@@ -215,7 +239,7 @@ const CreateAdModal = ({ isOpen, onClose }) => {
             <div className="flex justify-end gap-4 mt-6">
               <button
                 type="button"
-                onClick={onClose}
+                onClick={() => navigate("/")}
                 className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
               >
                 Annuler
