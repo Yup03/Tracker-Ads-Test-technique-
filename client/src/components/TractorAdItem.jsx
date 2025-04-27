@@ -18,7 +18,9 @@ const TractorAdItem = ({ ad }) => {
       <p className="text-gray-600 mb-3">{ad.description}</p>
       {/* Pied de l'annonce avec prix et localisation */}
       <div className="flex justify-between items-center">
-        <span className="text-lg font-bold text-green-600">{ad.price}</span>
+        <span className="text-lg font-bold text-green-600">
+          {Number(ad.price).toLocaleString("fr-FR")} FCFA
+        </span>
         <span className="text-gray-500">📍 {ad.location}</span>
       </div>
     </li>

@@ -8,8 +8,10 @@ import {
 import { Icon } from "leaflet"
 import "leaflet/dist/leaflet.css"
 import { useNavigate } from "react-router-dom"
+import { useAdContext } from "../context/AdContext"
 
-const Map = ({ tractorAds }) => {
+const Map = () => {
+  const { tractorAds, isLoading } = useAdContext()
   const markertIcon = new Icon({
     iconUrl:
       "https://www.iconpacks.net/icons/2/free-location-pin-icon-2965-thumb.png",
@@ -18,6 +20,9 @@ const Map = ({ tractorAds }) => {
     popupAnchor: [-3, -40], // point from which the popup should open relative to the iconAnchor
   })
 
+  // if (isLoading) {
+  //   return <div>Chargement...</div>
+  // }
   return (
     <div className="lg:w-1/2 h-[500px]">
       <MapContainer
@@ -32,7 +37,11 @@ const Map = ({ tractorAds }) => {
         />
         {/* Marqueurs pour chaque annonce */}
         {tractorAds.map(ad => (
-          <Marker position={ad.coordinates} icon={markertIcon} key={ad.id}>
+          <Marker
+            position={[ad.latitude, ad.longitude]}
+            icon={markertIcon}
+            key={ad.id}
+          >
             <Popup>{ad.location}</Popup>
           </Marker>
         ))}

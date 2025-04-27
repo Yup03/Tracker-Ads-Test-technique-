@@ -69,7 +69,14 @@ const CreateAdModal = () => {
     e.preventDefault()
     console.log("Form submitted:", formData)
     createAnnounce(formData)
-
+    setFormData({
+      title: "",
+      description: "",
+      price: "",
+      location: "",
+      latitude: "",
+      longitude: "",
+    })
     navigate("/")
   }
 
@@ -88,7 +95,7 @@ const CreateAdModal = () => {
       }))
     }
 
-    getCity()
+    if (lat && lng) getCity()
   }, [lat, lng])
 
   return (
@@ -246,7 +253,7 @@ const CreateAdModal = () => {
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 "
               >
                 Créer l'annonce
               </button>

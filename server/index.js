@@ -6,49 +6,118 @@ const app = express()
 let announces = [
   {
     id: 1,
-    title: "Tracteur Massey Ferguson 135",
+    title: "Tracteur Massey Ferguson 290",
     description:
-      "Excellent état, faible kilométrage, parfait pour petites exploitations",
-    price: "2 500 000 FCFA",
-    location: "Saint-Louis",
-    coordinates: [16.0326, -16.4818],
+      "Tracteur robuste idéal pour les grandes exploitations agricoles.",
+    price: 8500000,
+    location: "Dakar",
+    latitude: 14.6928,
+    longitude: -17.4467,
   },
   {
     id: 2,
-    title: "John Deere 5090M",
-    description: "Modèle récent, climatisation, très économique en carburant",
-    price: "4 800 000 FCFA",
-    location: "Dakar",
-    coordinates: [14.7167, -17.4677],
+    title: "Tracteur John Deere Série 5E",
+    description: "Excellente maniabilité et faible consommation de carburant.",
+    price: 9200000,
+    location: "Thiès",
+    latitude: 14.7896,
+    longitude: -16.938,
   },
   {
     id: 3,
-    title: "New Holland T6020",
-    description:
-      "Transmission automatique, cabine confortable, idéal pour grandes surfaces",
-    price: "3 900 000 FCFA",
-    location: "Thiès",
-    coordinates: [14.791, -16.9359],
+    title: "Tracteur New Holland TT4",
+    description: "Parfait pour les petits et moyens agriculteurs.",
+    price: 7800000,
+    location: "Saint-Louis",
+    latitude: 16.0179,
+    longitude: -16.4897,
   },
   {
     id: 4,
-    title: "Kubota M7060",
-    description: "Compact et puissant, parfait état, entretien régulier",
-    price: "3 200 000 FCFA",
+    title: "Tracteur Kubota L4701",
+    description: "Puissant, fiable et facile à entretenir.",
+    price: 8900000,
+    location: "Ziguinchor",
+    latitude: 12.5833,
+    longitude: -16.2719,
+  },
+  {
+    id: 5,
+    title: "Tracteur Case IH Farmall JX",
+    description: "Performance exceptionnelle pour divers travaux agricoles.",
+    price: 9100000,
     location: "Kaolack",
-    coordinates: [14.1652, -16.0726],
+    latitude: 14.1825,
+    longitude: -16.2533,
+  },
+  {
+    id: 6,
+    title: "Tracteur Sonalika DI 750 III",
+    description: "Modèle économique avec grande efficacité.",
+    price: 6700000,
+    location: "Tambacounda",
+    latitude: 13.7707,
+    longitude: -13.6673,
+  },
+  {
+    id: 7,
+    title: "Tracteur Deutz-Fahr Agrolux 80",
+    description: "Compact et polyvalent pour toutes les tâches.",
+    price: 8300000,
+    location: "Louga",
+    latitude: 15.6144,
+    longitude: -16.2242,
+  },
+  {
+    id: 8,
+    title: "Tracteur Mahindra 265 DI",
+    description: "Haute durabilité avec un excellent rapport qualité-prix.",
+    price: 6200000,
+    location: "Fatick",
+    latitude: 14.3396,
+    longitude: -16.4101,
   },
 ]
+
+announces.sort((a, b) => b.id - a.id)
 
 app.use(express.json())
 app.use(cors())
 
 app.get("/api/announces", (req, res) => {
-  res.status(200).json({ status: "success", data: announces })
+  const page = +req.query.page || 1
+  const limit = +req.query.limit || 3
+  const startIndex = (page - 1) * limit
+  const endIndex = page * limit
+
+  const results = {
+    page: {},
+  }
+
+  if (endIndex < announces.length) {
+    results.next = {
+      page: page + 1,
+      limit: limit,
+    }
+  }
+
+  if (startIndex > 0) {
+    results.previous = {
+      page: page - 1,
+      limit: limit,
+    }
+  }
+
+  results.totalPages = Math.ceil(announces.length / limit)
+  results.currentPage = page
+  results.count = announces.length
+  results.results = announces.slice(startIndex, endIndex)
+
+  res.status(200).json({ status: "success", data: results })
 })
 // Delete
 app.route("/api/announces/:id").delete((req, res) => {
-  const id = +req.params.id
+  id = +req.params.id
   announces = announces.filter(announce => announce.id !== id)
 
   res.status(204).json({ status: "success" })
@@ -63,10 +132,11 @@ app.route("/api/announces").post((req, res) => {
     description,
     price,
     location,
-    coordinates: [+latitude, +longitude],
+    latitude,
+    longitude,
   }
 
-  announces.push(newAnnounce)
+  announces = [newAnnounce, ...announces]
 
   res.status(201).json({ status: "success", data: newAnnounce })
 })
