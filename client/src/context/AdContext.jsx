@@ -17,7 +17,8 @@ export default function AdProvider({ children }) {
 
   const currentPage = searchParams.get("page") || 1
 
-  const baseUrl = "http://localhost:221/api/announces"
+  const baseUrl =
+    "https://tracker-ads-test-technique.onrender.com/api/announces"
 
   // Code de chargement des annonces de tracteurs depuis une API
   const getAnnounces = useCallback(async () => {
