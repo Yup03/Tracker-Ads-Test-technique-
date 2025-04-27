@@ -1,7 +1,7 @@
 # 🚜 Application de gestion d'annonces de tracteurs
 
 Ce projet est une application fullstack (frontend + backend) développée avec **React.js** (Vite + Tailwind CSS) et **Node.js/Express.js**.  
-Elle permet de gérer une liste d'annonces fictives de tracteurs, affichées sur une carte.
+Elle permet de gérer une liste d'annonces fictives de tracteurs, affichées sur une carte interactive.
 
 ## 🧰 Stack technique
 
