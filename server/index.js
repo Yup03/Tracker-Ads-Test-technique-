@@ -1,8 +1,8 @@
 const express = require("express")
 const cors = require("cors")
-
 const app = express()
 
+// Tableau des annonces de tracteurs avec données factices
 let announces = [
   {
     id: 1,
@@ -79,21 +79,24 @@ let announces = [
   },
 ]
 
-announces.sort((a, b) => b.id - a.id)
-
+// Configuration des middlewares
 app.use(express.json())
 app.use(cors())
 
+// Récupérer les annonces avec pagination
 app.get("/api/announces", (req, res) => {
+  // Récupération des paramètres de pagination depuis la requête
   const page = +req.query.page || 1
   const limit = +req.query.limit || 3
   const startIndex = (page - 1) * limit
   const endIndex = page * limit
 
+  // Préparation de l'objet de résultat
   const results = {
     page: {},
   }
 
+  // Ajout des informations de pagination pour la page suivante si elle existe
   if (endIndex < announces.length) {
     results.next = {
       page: page + 1,
@@ -101,6 +104,7 @@ app.get("/api/announces", (req, res) => {
     }
   }
 
+  // Ajout des informations de pagination pour la page précédente si elle existe
   if (startIndex > 0) {
     results.previous = {
       page: page - 1,
@@ -108,24 +112,33 @@ app.get("/api/announces", (req, res) => {
     }
   }
 
+  // Ajout des métadonnées de pagination
   results.totalPages = Math.ceil(announces.length / limit)
   results.currentPage = page
   results.count = announces.length
+  // Extraction des annonces pour la page demandée
   results.results = announces.slice(startIndex, endIndex)
 
+  // Envoi de la réponse au format JSON
   res.status(200).json({ status: "success", data: results })
 })
-// Delete
+
+// Supprimer une annonce par son ID
 app.route("/api/announces/:id").delete((req, res) => {
   id = +req.params.id
+  // Filtrage des annonces pour exclure celle à supprimer
   announces = announces.filter(announce => announce.id !== id)
 
+  // Réponse avec code 204 (No Content) pour indiquer le succès sans contenu
   res.status(204).json({ status: "success" })
 })
 
+// Créer une nouvelle annonce
 app.route("/api/announces").post((req, res) => {
+  // Extraction des données du corps de la requête
   const { title, description, price, location, latitude, longitude } = req.body
 
+  // Création d'un nouvel objet annonce
   const newAnnounce = {
     id: announces.length + 1,
     title,
@@ -136,11 +149,14 @@ app.route("/api/announces").post((req, res) => {
     longitude,
   }
 
+  // Ajout de la nouvelle annonce au début du tableau (pour qu'elle apparaisse en premier)
   announces = [newAnnounce, ...announces]
 
+  // Réponse avec code 201 (Created) et les données de la nouvelle annonce
   res.status(201).json({ status: "success", data: newAnnounce })
 })
 
+// Démarrage du serveur sur le port 221
 app.listen(221, () => {
   console.log("Server is running on port 221")
 })

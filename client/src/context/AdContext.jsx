@@ -13,8 +13,8 @@ export default function AdProvider({ children }) {
   const [isLoading, setIsLoading] = useState(false)
   const [nextPage, setNextPage] = useState()
   const [previousPage, setPreviousPage] = useState()
-  const [searchParams, setSearchParams] = useSearchParams()
-  const { navigate } = useNavigate()
+  const [searchParams] = useSearchParams()
+
   const currentPage = searchParams.get("page") || 1
 
   const baseUrl = "http://localhost:221/api/announces"

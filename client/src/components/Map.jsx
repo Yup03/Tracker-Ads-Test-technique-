@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom"
 import { useAdContext } from "../context/AdContext"
 
 const Map = () => {
-  const { tractorAds, isLoading } = useAdContext()
+  const { tractorAds } = useAdContext()
   const markertIcon = new Icon({
     iconUrl:
       "https://www.iconpacks.net/icons/2/free-location-pin-icon-2965-thumb.png",

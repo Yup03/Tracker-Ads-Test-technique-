@@ -1,7 +1,5 @@
 import TractorAds from "../components/TractorAds"
 import Map from "../components/Map"
-import { useAdContext } from "../context/AdContext"
-import CreateAdModal from "../components/CreateAdModal"
 import { Outlet, useNavigate } from "react-router-dom"
 
 const Homepage = () => {
